@@ -1,5 +1,6 @@
 ﻿using Plugin.Fingerprint;
 using Plugin.Fingerprint.Abstractions;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace probandoMaui
@@ -11,6 +12,30 @@ namespace probandoMaui
         public MainPage()
         {
             InitializeComponent();
+
+            var nombre = Preferences.Get("Nombre", "Sin nombre");
+            var edad = Preferences.Get("Edad", 99); //el 99 marca el valor por defecto de Edad si no hubiese ningun dato cargado
+            var apellido = Preferences.Get("Apellido", "Gómez");
+            var fecha = Preferences.Get("FechaNac", DateTime.Now.AddYears(25));
+            Preferences.Set("Nombre", "Juan");
+            Preferences.Set("FechaNac", DateTime.Now);
+            Preferences.Remove("Edad");
+            Preferences.Clear();
+
+            List<string> list = new List<string>();
+            list.Add("Esto es una lista");
+            list.Add("Otro texto agregado");
+
+            string filename = FileSystem.AppDataDirectory + "/ejemploArchivo.json";
+
+            var serializedData = JsonSerializer.Serialize(list);
+            File.WriteAllText(filename, serializedData); 
+
+            var rawData = File.ReadAllText(filename);
+            var listaDez = JsonSerializer.Deserialize<List<string>>(rawData);   
+
+
+
         }
 
         private void OnCounterClicked(object sender, EventArgs e)
@@ -31,6 +56,7 @@ namespace probandoMaui
             //{
 
             //}
+
 
             try
             {
